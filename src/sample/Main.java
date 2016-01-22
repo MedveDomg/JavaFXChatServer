@@ -215,7 +215,7 @@ public class Main extends Application {
                             System.out.println("Client says : " + messageFromClient);
                             //			l.setText("Server says : " + messageFromServer);
 
-                            list.getItems().add("Server: " + messageFromClient);
+
 
 
                         }
