@@ -111,7 +111,7 @@ public class Main extends Application {
                                     @Override
                                     public void handle(ActionEvent event) {
 
-                                        int port = 2019;
+                                        int port = 2020;
 
                                         try {
                                             Thread t = new GreetingServer(port);
@@ -176,13 +176,13 @@ public class Main extends Application {
         }
     }
 
-    public static class GreetingServer extends Thread {
+    public  class GreetingServer extends Thread {
         public String text;
         private ServerSocket serverSocket;
         private InetAddress IP;
         private Socket server;
         private DefaultListModel listModel;
-        private JList list;
+        private ListView list;
 
         public  GreetingServer(int port) throws IOException, java.lang.IllegalArgumentException {
             serverSocket = new ServerSocket(port);
@@ -200,7 +200,26 @@ public class Main extends Application {
                     System.out.println("Just connected to " + server.getRemoteSocketAddress());
                     while (true) {
                         DataInputStream in = new DataInputStream(server.getInputStream());
-                        listModel.addElement("Client: " + in.readUTF());
+                        boolean isConnected = true;
+                        while (isConnected) {
+
+
+                            String messageFromClient = null;
+                            try {
+                                messageFromClient= in.readUTF();
+                            } catch (Exception e) {
+                                isConnected = false;
+                                messageFromClient = "";
+                            }
+
+                            System.out.println("Client says : " + messageFromClient);
+                            //			l.setText("Server says : " + messageFromServer);
+
+                            list.getItems().add("Server: " + messageFromClient);
+
+
+                        }
+                        list.getItems().add("Client: " + in.readUTF());
                         System.out.println(in.readUTF());
 
                     }
@@ -235,7 +254,6 @@ public class Main extends Application {
     public static void sendMessageToClient(String message) {
 
         try {
-
             OutputStream outToServer = server.getOutputStream();
 
             DataOutputStream out = new DataOutputStream(outToServer);
